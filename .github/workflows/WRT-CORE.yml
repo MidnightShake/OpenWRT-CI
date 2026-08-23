@@ -193,6 +193,7 @@ jobs:
       - name: Install Lucky Packages
         if: env.WRT_TEST != 'true'
         run: |
+          cd ./wrt/  # ← 关键！先进入 wrt 目录
           echo "开始安装 Lucky 包..."
           
           # 获取最新 Tag
@@ -241,7 +242,7 @@ jobs:
               exit 0
           }
           
-          # 复制到编译输出目录（这次目录已经存在）
+          # 复制到编译输出目录
           LK_TARGET_DIR="./bin/packages/aarch64_generic"
           mkdir -p "$LK_TARGET_DIR"
           
