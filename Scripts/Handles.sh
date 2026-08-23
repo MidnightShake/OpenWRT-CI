@@ -256,3 +256,68 @@ if [ -f "$RUST_FILE" ]; then
 		echo "rust fix failed; continuing!"
 	fi
 fi
+
+# 安装最新版 Lucky (aarch64_generic)
+install_lucky() {
+    echo ">>> 正在获取最新版 Lucky (aarch64_generic)..."
+
+    # 检查必要工具
+    command -v wget > /dev/null 2>&1 || { echo "wget not found, skipping Lucky installation"; return 1; }
+    command -v unzip > /dev/null 2>&1 || { echo "unzip not found, skipping Lucky installation"; return 1; }
+
+    # 1. 通过 GitHub API 获取最新 Release 信息
+    local LK_API_URL="https://api.github.com/repos/FloatingDream528/luci-app-lucky/releases/latest"
+    local LK_RELEASE_JSON=$(curl -s "${LK_API_URL}" 2>/dev/null)
+    if [ -z "$LK_RELEASE_JSON" ]; then
+        echo ">>> 无法获取 Lucky Release 信息，跳过安装"
+        return 1
+    fi
+
+    # 2. 提取 tag 和 aarch64_generic zip 下载 URL
+    local LK_TAG=$(echo "$LK_RELEASE_JSON" | grep -oP '"tag_name":\s*"\K[^"]+')
+    local LK_ZIP_URL=$(echo "$LK_RELEASE_JSON" | grep -oP '"browser_download_url":\s*"\K[^"]+-aarch64_generic\.zip' | head -1)
+
+    if [ -z "$LK_TAG" ] || [ -z "$LK_ZIP_URL" ]; then
+        echo ">>> 未找到 aarch64_generic 架构的 Lucky 包，跳过安装"
+        return 1
+    fi
+
+    echo ">>> 最新版本: ${LK_TAG}"
+    echo ">>> 下载地址: ${LK_ZIP_URL}"
+
+    # 3. 确定目标路径 (wrt/packages/lucky)
+    local WRT_ROOT="$(dirname "$PKG_PATH")"  # PKG_PATH = wrt/package
+    local LK_TARGET_DIR="$WRT_ROOT/packages/lucky"
+    mkdir -p "$LK_TARGET_DIR"
+
+    # 4. 下载并解压
+    local LK_TMP="/tmp/lucky_$$"
+    mkdir -p "$LK_TMP"
+    wget -q "$LK_ZIP_URL" -O "$LK_TMP/lucky.zip" || {
+        echo ">>> 下载失败，跳过 Lucky 安装"
+        rm -rf "$LK_TMP"
+        return 1
+    }
+    unzip -q "$LK_TMP/lucky.zip" -d "$LK_TMP/" || {
+        echo ">>> 解压失败，跳过 Lucky 安装"
+        rm -rf "$LK_TMP"
+        return 1
+    }
+
+    # 5. 复制所有 .apk 文件
+    find "$LK_TMP" -name "*.apk" -exec cp -f {} "$LK_TARGET_DIR/" \; 2>/dev/null
+
+    # 6. 检查是否成功复制了 apk
+    local APK_COUNT=$(find "$LK_TARGET_DIR" -maxdepth 1 -name "*.apk" | wc -l)
+    if [ "$APK_COUNT" -eq 0 ]; then
+        echo ">>> 未找到任何 .apk 文件，Lucky 安装可能失败"
+    else
+        echo ">>> Lucky ${LK_TAG} 安装成功，共 ${APK_COUNT} 个 apk 包已复制到 $LK_TARGET_DIR"
+    fi
+
+    # 7. 清理临时文件
+    rm -rf "$LK_TMP"
+}
+
+# 调用函数（即使失败也不会中断脚本）
+install_lucky || echo ">>> Lucky 安装失败，继续执行其他 handlers"
