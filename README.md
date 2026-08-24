@@ -4,7 +4,7 @@
   - 工作流仅保留生成包含 IPQ60XX-WIFI-YES ： link nn600v2 ipq6000 框架平台固件
   - 工作流仅.github/workflows/QCA-ALL.yml IPQ60XX-WIFI-YES 相关
 
-# 固件修改内容包括：
+# 固件插件修改内容包括：
   - 增加：luci-app-dockerman  luci-i18n-dockerman-zh-cn  docker-compose
     - 来源：上游官方
     
@@ -17,7 +17,7 @@
       - luci-i18n-lucky-zh-cn - 26.205.10034~ed6ebfc
       
     
-  - 科学插件由luci-app-homeproxy调整为：luci-app-openclash
+  - 科学插件由 luci-app-homeproxy 调整为：luci-app-openclash
     - 来源：上游官方
 
 # 修改内容未经其它硬件测试
