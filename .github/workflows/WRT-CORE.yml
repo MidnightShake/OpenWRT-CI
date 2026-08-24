@@ -236,39 +236,45 @@ jobs:
             make clean -j$(nproc)
           fi
 
-      - name: Auto Update README Lucky Version
+      - name: Auto Sync Upstream README & Update Lucky Version
         if: env.WRT_TEST != 'true'
         run: |
-          # 1. 查找生成的 .manifest 文件
+          # 1. 抓取上游 VIKINGYFY/OpenWRT-CI 最新 README.md
+          UPSTREAM_README=$(curl -sL "https://raw.githubusercontent.com/VIKINGYFY/OpenWRT-CI/main/README.md")
+          
+          if [ -n "$UPSTREAM_README" ]; then
+            # 将抓取到的上游内容替换到 <!-- UPSTREAM_README_START --> 与 <!-- UPSTREAM_README_END --> 之间
+            perl -0777 -pi -e "s/(<!-- UPSTREAM_README_START -->\n)([\s\S]*?)(<!-- UPSTREAM_README_END -->)/\$1\n# 上游源 README.md 内容：\n\n${UPSTREAM_README//\$/\\\$}\n\n\$3/g" README.md
+            echo ">>> 成功抓取并同步上游 README.md！"
+          fi
+        
+          # 2. 从编译生成的 .manifest 文件读取 Lucky 相关版本号
           MANIFEST_FILE=$(find ./wrt/bin/targets/ -type f -name "*.manifest" 2>/dev/null | head -n 1)
           
           if [ -n "$MANIFEST_FILE" ] && [ -f "$MANIFEST_FILE" ]; then
             echo ">>> 找到 manifest 文件: $MANIFEST_FILE"
             
-            # 2. 提取三个 lucky 相关包的版本号
             LUCKY_VER=$(grep -E "^lucky[[:space:]]" "$MANIFEST_FILE" | awk '{print $2}')
             LUCI_VER=$(grep -E "^luci-app-lucky[[:space:]]" "$MANIFEST_FILE" | awk '{print $2}')
             I18N_VER=$(grep -E "^luci-i18n-lucky-zh-cn[[:space:]]" "$MANIFEST_FILE" | awk '{print $2}')
             
-            # 3. 格式化多行替换文本
             NEW_TEXT="    - lucky - ${LUCKY_VER}\n    - luci-app-lucky - ${LUCI_VER}\n    - luci-i18n-lucky-zh-cn - ${I18N_VER}"
             
-            # 4. 正则替换 README.md 中标记之间的内容
+            # 正则替换 Lucky 版本号
             perl -0777 -pi -e "s/(<!-- LUCKY_VERSION_START -->\n)([\s\S]*?)(<!-- LUCKY_VERSION_END -->)/\$1${NEW_TEXT}\n\$3/g" README.md
-            
-            # 5. 提交并推送最新 README.md 到仓库
-            git config --global user.name "github-actions[bot]"
-            git config --global user.email "github-actions[bot]@users.noreply.github.com"
-            if ! git diff --quiet README.md; then
-              git add README.md
-              git commit -m "auto: 自动更新 README 中 Lucky 编译版本号 [skip ci]"
-              git push
-              echo ">>> README.md 中的 Lucky 版本号已成功更新！"
-            else
-              echo ">>> README.md 版本无变动，跳过提交。"
-            fi
+            echo ">>> 成功更新 Lucky 版本号！"
+          fi
+          
+          # 3. 提交变动回你的仓库
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet README.md; then
+            git add README.md
+            git commit -m "auto: 自动同步上游 README 及更新 Lucky 版本号 [skip ci]"
+            git push
+            echo ">>> README.md 已成功更新并推送到仓库！"
           else
-            echo ">>> 警告: 未找到 manifest 文件，跳过 README 更新。"
+            echo ">>> README.md 无变动，跳过推送。"
           fi
           
       - name: Release Firmware
