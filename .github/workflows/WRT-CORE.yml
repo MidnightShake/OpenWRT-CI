@@ -183,78 +183,15 @@ jobs:
 
           make download -j$(nproc)
 
-      - name: Pre-Install Lucky Packages
+      - name: Check Lucky Package Source
         if: env.WRT_TEST != 'true'
         run: |
           cd ./wrt/
-          echo ">>> 编译前准备 Lucky 包..."
-          
-          # 获取最新 Tag
-          LK_TAG=$(curl -s https://api.github.com/repos/FloatingDream528/luci-app-lucky/tags | jq -r '.[0].name' 2>/dev/null)
-          if [ -z "$LK_TAG" ]; then
-              echo ">>> 无法获取最新 Lucky Tag，跳过安装"
-              exit 0
-          fi
-          
-          echo ">>> 最新 Lucky 版本: ${LK_TAG}"
-          
-          # 下载地址
-          LK_ZIP_URL="https://github.com/FloatingDream528/luci-app-lucky/releases/download/${LK_TAG}/${LK_TAG}-aarch64_generic.zip"
-          echo ">>> 下载地址: ${LK_ZIP_URL}"
-          
-          # 验证链接
-          if ! curl -s -L -o /dev/null -w "%{http_code}" "$LK_ZIP_URL" | grep -q "200"; then
-              echo ">>> 下载链接无效，跳过 Lucky 安装"
-              exit 0
-          fi
-          
-          # 准备临时目录
-          LK_TMP="/tmp/lucky_$$"
-          mkdir -p "$LK_TMP"
-          
-          # 下载
-          echo ">>> 正在下载 Lucky ${LK_TAG}..."
-          wget -q --max-redirect=5 "$LK_ZIP_URL" -O "$LK_TMP/lucky.zip" || {
-              echo ">>> 下载失败，跳过 Lucky 安装"
-              rm -rf "$LK_TMP"
-              exit 0
-          }
-          
-          # 检查文件
-          if [ ! -s "$LK_TMP/lucky.zip" ]; then
-              echo ">>> 下载文件为空，跳过 Lucky 安装"
-              rm -rf "$LK_TMP"
-              exit 0
-          fi
-          
-          # 解压
-          echo ">>> 正在解压..."
-          unzip -q "$LK_TMP/lucky.zip" -d "$LK_TMP/" || {
-              echo ">>> 解压失败，跳过 Lucky 安装"
-              rm -rf "$LK_TMP"
-              exit 0
-          }
-          
-          # 复制到编译输入目录（编译前）
-          LK_TARGET_DIR="./bin/packages/aarch64_generic"
-          mkdir -p "$LK_TARGET_DIR"
-          
-          echo ">>> 正在复制 APK 包到编译目录..."
-          find "$LK_TMP" -name "*.apk" -type f -exec cp -f {} "$LK_TARGET_DIR/" \; 2>/dev/null
-          
-          # 统计
-          APK_COUNT=$(find "$LK_TARGET_DIR" -maxdepth 1 -name "*.apk" -type f | wc -l)
-          if [ "$APK_COUNT" -eq 0 ]; then
-              echo ">>> 未找到 .apk 文件，Lucky 安装失败"
-              rm -rf "$LK_TMP"
-              exit 1
+          if [ -d "package/luci-app-lucky" ]; then
+            echo ">>> Lucky 源码已成功集成到 package 目录，将随固件一并原生编译！"
           else
-              echo ">>> Lucky ${LK_TAG} 准备完成！共 ${APK_COUNT} 个包"
-              find "$LK_TARGET_DIR" -maxdepth 1 -name "*.apk" -type f -printf "    - %f\n"
+            echo ">>> 未找到 Lucky 源码，请检查 Scripts/Packages.sh"
           fi
-          
-          # 清理
-          rm -rf "$LK_TMP"
           
       - name: Compile Firmware
         if: env.WRT_TEST != 'true'
