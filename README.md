@@ -6,19 +6,19 @@
 
 # 固件修改内容包括：
   - 增加：luci-app-dockerman  luci-i18n-dockerman-zh-cn  docker-compose
-    来源：上游官方
+    - 来源：上游官方
     
   - 增加：lucky  luci-app-lucky  luci-i18n-lucky-zh-cn
-    来源：https://github.com/FloatingDream528/luci-app-lucky
-    当前加入编译固件信息（arm64）：
-      核心源自：https://release.66666.host
-      lucky - 3.0.0_beta8-r1
-      luci-app-lucky - 3.0.0_beta8-r1
-      luci-i18n-lucky-zh-cn - 26.205.10034~ed6ebfc
+    - 来源：https://github.com/FloatingDream528/luci-app-lucky
+    - 当前加入编译固件信息（arm64）：
+      - 核心源自：https://release.66666.host
+      - lucky - 3.0.0_beta8-r1
+      - luci-app-lucky - 3.0.0_beta8-r1
+      - luci-i18n-lucky-zh-cn - 26.205.10034~ed6ebfc
       
     
   - 科学插件由luci-app-homeproxy调整为：luci-app-openclash
-    来源：上游官方
+    - 来源：上游官方
 
 # 修改内容未经其它硬件测试
 
