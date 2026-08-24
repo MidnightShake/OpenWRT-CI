@@ -1,8 +1,8 @@
 # 源自  https://github.com/VIKINGYFY/OpenWRT-CI
 
-# 此为 自用修改版固件，工作流仅保留生成包含 IPQ60XX-WIFI-YES ： link nn600v2 ipq6000 框架平台固件
-
-# 工作流仅.github/workflows/QCA-ALL.yml相关
+# 此为 自用修改版固件
+  - 工作流仅保留生成包含 IPQ60XX-WIFI-YES ： link nn600v2 ipq6000 框架平台固件
+  - 工作流仅.github/workflows/QCA-ALL.yml IPQ60XX-WIFI-YES 相关
 
 # 固件修改内容包括：
   - 增加：luci-app-dockerman  luci-i18n-dockerman-zh-cn  docker-compose
