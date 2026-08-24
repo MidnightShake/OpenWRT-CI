@@ -82,6 +82,13 @@ UPDATE_PACKAGE "viking" "VIKINGYFY/packages" "main" "" "axonhub gecoosac sing-bo
 UPDATE_PACKAGE "vnt" "lmq8267/luci-app-vnt" "main"
 
 UPDATE_PACKAGE "luci-app-lucky" "FloatingDream528/luci-app-lucky" "main" "" "lucky luci-app-lucky luci-i18n-lucky-zh-cn"
+# 预先拉取 Lucky 核心二进制到 dl 缓存目录，防止 OpenWrt 在 make download 阶段触发下载失败
+if [ -d "luci-app-lucky/scripts" ]; then
+    echo ">>> 开始为 Lucky 预下载二进制核心文件到 dl 目录..."
+    mkdir -p dl
+    chmod +x luci-app-lucky/scripts/dl_lucky.sh 2>/dev/null
+    ./luci-app-lucky/scripts/dl_lucky.sh dl/ 2>/dev/null || true
+fi
 
 #更新软件包版本
 UPDATE_VERSION() {
