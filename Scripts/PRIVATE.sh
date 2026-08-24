@@ -8,7 +8,7 @@ LUCKY_SCRIPT=$(find "$WRT_DIR/package/" "$WRT_DIR/feeds/" -type f -name "prepare
 
 if [ -n "$LUCKY_SCRIPT" ]; then
     echo ">>> 找到 Lucky 预下载脚本: $LUCKY_SCRIPT"
-    echo ">>> 开始预下载 Lucky (aarch64) 二进制核心..."
+    echo ">>> 开始预下载 Lucky (arm64) 二进制核心..."
     
     # 确保 OpenWrt 主 dl 目录存在
     mkdir -p "$WRT_DIR/dl"
@@ -16,17 +16,23 @@ if [ -n "$LUCKY_SCRIPT" ]; then
     # 赋予执行权限
     chmod +x "$LUCKY_SCRIPT"
     
-    # 显式传递参数
-    export LUCKY_CORE_ARCH="aarch64"
+    # 修正架构名称为官方匹配的 arm64
+    export LUCKY_CORE_ARCH="arm64"
     
-    # 执行脚本
+    # 执行预下载脚本
     "$LUCKY_SCRIPT" || true
     
-    # 核心修补：把脚本下载到相对目录 (package/luci-app-lucky/dl/) 里的文件复制到 OpenWrt 主 dl 目录下
+    # 核心修补：把下载的核心放到 OpenWrt 主 dl 目录下
     LUCKY_PKG_DIR="$(dirname "$LUCKY_SCRIPT")/.."
     if [ -d "$LUCKY_PKG_DIR/dl" ]; then
         cp -rf "$LUCKY_PKG_DIR/dl/"* "$WRT_DIR/dl/" 2>/dev/null || true
         echo ">>> 已成功同步 Lucky 核心文件到 OpenWrt 主 dl 目录！"
+    fi
+
+    # 如果生成了环境变量，导入进来
+    if [ -f "$LUCKY_PKG_DIR/.lucky-release.env" ]; then
+        source "$LUCKY_PKG_DIR/.lucky-release.env"
+        echo ">>> 已加载 Lucky 最新版本信息: ${LUCKY_TAG}"
     fi
     
     echo ">>> Lucky 核心预处理彻底完成！"
