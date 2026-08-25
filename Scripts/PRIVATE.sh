@@ -16,8 +16,26 @@ if [ -n "$LUCKY_SCRIPT" ]; then
     # 赋予执行权限
     chmod +x "$LUCKY_SCRIPT"
     
-    # 修正架构名称为官方匹配的 arm64
+    # 修正覆盖设定架构和版本类型
     export LUCKY_CORE_ARCH="arm64"
+    export LUCKY_VARIANT="wanji"
+
+    # 覆盖下载脚本 release_subdir
+    release_subdir="$(
+        printf '%s\n' "$tag_html" |
+            grep -Eo "\./[0-9][^\"/]_${LUCKY_VARIANT}/" |
+            sed 's#^\./##; s#/$##' |
+            grep -v '_docker$' |
+            head -n 1 || true
+    )"
+
+    # 覆盖下载脚本 source_file
+    source_file="$(
+        printf '%s\n' "$release_html" |
+            grep -Eo "lucky_[^\"<> ]+_Linux_${LUCKY_CORE_ARCH}(_${LUCKY_VARIANT})?\\.tar\\.gz" |
+            sort -u |
+            head -n 1 || true
+    )"
     
     # 执行预下载脚本
     "$LUCKY_SCRIPT" || true
