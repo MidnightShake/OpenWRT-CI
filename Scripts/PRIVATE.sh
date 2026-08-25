@@ -25,7 +25,7 @@ if [ -n "$LUCKY_SCRIPT" ]; then
         # 替换目录匹配
         sed -i "s#_lucky/#_${LUCKY_VARIANT}/#g" "$LUCKY_SCRIPT"
         # 替换文件名匹配
-        sed -i "s#Linux_\${CORE_ARCH}\\.tar\\.gz#Linux_\${CORE_ARCH}_${LUCKY_VARIANT}\\.tar\\.gz#g" "$LUCKY_SCRIPT"
+        sed -i 's/Linux_\${CORE_ARCH}\\\.tar\\\.gz/Linux_\${CORE_ARCH}_'"${LUCKY_VARIANT}"'\\\.tar\\\.gz/g' "$LUCKY_SCRIPT"
     fi
     
     # 执行预下载脚本
