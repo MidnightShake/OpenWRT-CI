@@ -240,15 +240,26 @@ jobs:
         if: env.WRT_TEST != 'true'
         run: |
           # 1. 抓取上游 VIKINGYFY/OpenWRT-CI 最新 README.md
-          UPSTREAM_README=$(curl -sL "https://raw.githubusercontent.com/VIKINGYFY/OpenWRT-CI/main/README.md")
+          curl -sL "https://raw.githubusercontent.com/VIKINGYFY/OpenWRT-CI/main/README.md" -o /tmp/upstream_readme.md
           
-          if [ -n "$UPSTREAM_README" ]; then
-            # 将抓取到的上游内容替换到 <!-- UPSTREAM_README_START --> 与 <!-- UPSTREAM_README_END --> 之间
-            perl -0777 -pi -e "s/(<!-- UPSTREAM_README_START -->\n)([\s\S]*?)(<!-- UPSTREAM_README_END -->)/\$1\n# 上游源 README.md 内容：\n\n${UPSTREAM_README//\$/\\\$}\n\n\$3/g" README.md
+          # 2. 使用 awk 替换上游 README 内容（无需转义 URL 和特殊符号）
+          if [ -s /tmp/upstream_readme.md ]; then
+            awk '
+              /<!-- UPSTREAM_README_START -->/ {
+                print
+                print "# 上游源 README.md 内容：\n"
+                while ((getline line < "/tmp/upstream_readme.md") > 0) print line
+                close("/tmp/upstream_readme.md")
+                skip = 1
+                next
+              }
+              /<!-- UPSTREAM_README_END -->/ { skip = 0 }
+              !skip
+            ' README.md > README.tmp && mv README.tmp README.md
             echo ">>> 成功抓取并同步上游 README.md！"
           fi
-        
-          # 2. 从编译生成的 .manifest 文件读取 Lucky 相关版本号
+  
+          # 3. 从编译生成的 .manifest 文件读取 Lucky 相关版本号
           MANIFEST_FILE=$(find ./wrt/bin/targets/ -type f -name "*.manifest" 2>/dev/null | head -n 1)
           
           if [ -n "$MANIFEST_FILE" ] && [ -f "$MANIFEST_FILE" ]; then
@@ -258,14 +269,23 @@ jobs:
             LUCI_VER=$(grep -E "^luci-app-lucky[[:space:]]" "$MANIFEST_FILE" | awk '{print $2}')
             I18N_VER=$(grep -E "^luci-i18n-lucky-zh-cn[[:space:]]" "$MANIFEST_FILE" | awk '{print $2}')
             
-            NEW_TEXT="    - lucky - ${LUCKY_VER}\n    - luci-app-lucky - ${LUCI_VER}\n    - luci-i18n-lucky-zh-cn - ${I18N_VER}"
-            
-            # 正则替换 Lucky 版本号
-            perl -0777 -pi -e "s/(<!-- LUCKY_VERSION_START -->\n)([\s\S]*?)(<!-- LUCKY_VERSION_END -->)/\$1${NEW_TEXT}\n\$3/g" README.md
+            # 4. 使用 awk 纯文本替换 Lucky 版本信息
+            awk -v l_ver="$LUCKY_VER" -v lc_ver="$LUCI_VER" -v i_ver="$I18N_VER" '
+              /<!-- LUCKY_VERSION_START -->/ {
+                print
+                print "    - lucky - " l_ver
+                print "    - luci-app-lucky - " lc_ver
+                print "    - luci-i18n-lucky-zh-cn - " i_ver
+                skip = 1
+                next
+              }
+              /<!-- LUCKY_VERSION_END -->/ { skip = 0 }
+              !skip
+            ' README.md > README.tmp && mv README.tmp README.md
             echo ">>> 成功更新 Lucky 版本号！"
           fi
           
-          # 3. 提交变动回你的仓库
+          # 5. 提交变动回你的仓库
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           if ! git diff --quiet README.md; then
