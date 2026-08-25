@@ -10,7 +10,7 @@
     
   - 增加：lucky  luci-app-lucky  luci-i18n-lucky-zh-cn
     - 来源：https://github.com/FloatingDream528/luci-app-lucky
-    - 当前加入编译固件信息（arm64）：
+    - 当前加入编译固件信息（arm64_wanji）：
       - 核心源自：https://release.66666.host
 <!-- LUCKY_VERSION_START -->
       - lucky - 3.0.0_beta8-r1
