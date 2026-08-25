@@ -81,7 +81,7 @@ UPDATE_PACKAGE "timecontrol" "sirpdboy/luci-app-timecontrol" "main"
 UPDATE_PACKAGE "viking" "VIKINGYFY/packages" "main" "" "axonhub gecoosac sing-box luci-app-homeproxy luci-app-timewol luci-app-wolplus luci-app-wolultra"
 UPDATE_PACKAGE "vnt" "lmq8267/luci-app-vnt" "main"
 
-UPDATE_PACKAGE "luci-app-lucky" "FloatingDream528/luci-app-lucky" "main" "" "lucky luci-app-lucky luci-i18n-lucky-zh-cn"
+UPDATE_PACKAGE "luci-app-lucky" "MidnightShake/luci-app-lucky" "main" "" "lucky luci-app-lucky luci-i18n-lucky-zh-cn"
 
 #更新软件包版本
 UPDATE_VERSION() {
