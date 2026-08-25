@@ -19,14 +19,6 @@ if [ -n "$LUCKY_SCRIPT" ]; then
     # 修正覆盖设定架构和版本类型
     export LUCKY_CORE_ARCH="arm64"
     export LUCKY_VARIANT="wanji"  # 空值为lucky默认版
-
-    # 如果设定了 LUCKY_VARIANT，就替换成对应版本；否则保持原版
-    if [ -n "$LUCKY_VARIANT" ]; then
-        # 替换目录匹配
-        sed -i "s#_lucky/#_${LUCKY_VARIANT}/#g" "$LUCKY_SCRIPT"
-        # 替换文件名匹配
-        sed -i 's/Linux_\${CORE_ARCH}\\\.tar\\\.gz/Linux_\${CORE_ARCH}_'"${LUCKY_VARIANT}"'\\\.tar\\\.gz/g' "$LUCKY_SCRIPT"
-    fi
     
     # 执行预下载脚本
     "$LUCKY_SCRIPT" || true
