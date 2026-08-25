@@ -23,8 +23,6 @@
 
 # 修改内容未经其它硬件测试
 
-/n
-/n
 
 <!-- UPSTREAM_README_START -->
 # 上游源 README.md 内容：
