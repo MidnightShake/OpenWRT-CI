@@ -20,6 +20,8 @@
       
   - 科学插件由 luci-app-homeproxy 调整为：luci-app-openclash
     - 来源：上游官方
+  - 增加：mosdns luci-app-mosdns
+    - 来源：上游官方
 
 # 修改内容未经其它硬件测试
 
