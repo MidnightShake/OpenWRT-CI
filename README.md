@@ -13,9 +13,9 @@
     - 当前加入编译固件信息（arm64_wanji）：
       - 核心源自：https://release.66666.host
 <!-- LUCKY_VERSION_START -->
-      - lucky - 3.0.0_beta8-r1
-      - luci-app-lucky - 3.0.0_beta8-r1
-      - luci-i18n-lucky-zh-cn - 26.205.10034~ed6ebfc
+      - lucky - 3.3.3_beta-r1
+      - luci-app-lucky - 3.3.3_beta-r1
+      - luci-i18n-lucky-zh-cn - 26.285.11161~1f40dad
 <!-- LUCKY_VERSION_END -->
       
   - 科学插件由 luci-app-homeproxy 调整为：luci-app-openclash
