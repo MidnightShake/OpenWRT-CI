@@ -107,6 +107,9 @@ jobs:
           echo "WRT_WIFI=wifi-yes" >> $GITHUB_ENV
           echo "WRT_KVER=none" >> $GITHUB_ENV
           echo "WRT_LIST=none" >> $GITHUB_ENV
+      
+          echo "WRT_CACHE_PREFIX=${GITHUB_REPOSITORY##*/}-${WRT_CONFIG}-${WRT_BRANCH}" >> $GITHUB_ENV
+          echo "WRT_CACHE_KEY=${WRT_CACHE_PREFIX}-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Clone Code
         id: clone-code
@@ -130,8 +133,8 @@ jobs:
         if: ${{ !inputs.WRT_TEST }}
         uses: actions/cache/restore@main
         with:
-          key: ${{env.WRT_CACHE_KEY}}
-          restore-keys: ${{env.WRT_CACHE_PREFIX}}-
+          key: ${{ env.WRT_CACHE_KEY }}
+          restore-keys: ${{ env.WRT_CACHE_PREFIX }}-
           path: |
             ./wrt/.ccache
             ./wrt/staging_dir/host*
