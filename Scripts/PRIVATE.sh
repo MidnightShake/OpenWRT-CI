@@ -40,3 +40,47 @@ if [ -n "$LUCKY_SCRIPT" ]; then
 else
     echo ">>> 警告: 未找到 prepare-latest-lucky.sh 脚本，请检查 Packages.sh 中 lucky 源码是否正确拉取。"
 fi
+
+# 修复 mosdns 与 luci-app-mosdns 同时安装 /etc/init.d/mosdns 的冲突
+# 让 mosdns 继续持有 init 脚本，luci-app-mosdns 只保留 LuCI 界面和配置
+PATCH_MOSDNS_INIT_CONFLICT() {
+    local CANDIDATE_DIRS=(
+        "$WRT_DIR/package/luci-app-mosdns"
+        "$GITHUB_WORKSPACE/package/luci-app-mosdns"
+        "./package/luci-app-mosdns"
+    )
+
+    local PKG_DIR=""
+    for d in "${CANDIDATE_DIRS[@]}"; do
+        if [ -d "$d" ]; then
+            PKG_DIR="$d"
+            break
+        fi
+    done
+
+    if [ -z "$PKG_DIR" ]; then
+        echo "[mosdns-fix] luci-app-mosdns not found, skip."
+        return 0
+    fi
+
+    echo "[mosdns-fix] patching $PKG_DIR"
+
+    # 删除重复的 init 脚本文件
+    find "$PKG_DIR" \
+        -type f \
+        \( -path "*/etc/init.d/mosdns" -o -path "*/files/mosdns.init" -o -path "*/root/etc/init.d/mosdns" \) \
+        -exec rm -f {} \; 2>/dev/null || true
+
+    # 删除 Makefile 里重复安装 init 脚本的规则
+    while IFS= read -r mf; do
+        [ -n "$mf" ] || continue
+        sed -i '/\/etc\/init.d\/mosdns/d; /mosdns.init/d' "$mf" 2>/dev/null || true
+    done < <(find "$PKG_DIR" -type f \( -name 'Makefile' -o -name '*.mk' \) -print 2>/dev/null)
+
+    # 清理常见重复目录
+    rm -rf "$PKG_DIR"/root/etc/init.d "$PKG_DIR"/etc/init.d "$PKG_DIR"/files 2>/dev/null || true
+
+    echo "[mosdns-fix] Removed duplicate mosdns init ownership from luci-app-mosdns"
+}
+
+PATCH_MOSDNS_INIT_CONFLICT
