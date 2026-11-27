@@ -228,8 +228,15 @@ if [ "${README_NO_PUSH:-0}" = "1" ]; then
 fi
 
 cd "$WORKSPACE"
-git config --global user.name "github-actions[bot]"
-git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+# 只在 git 仓库内提交；使用仓库级身份，避免污染开发机的全局 git 配置
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+	warn "README 已更新，但 $WORKSPACE 不是 git 仓库，跳过提交推送"
+	exit 0
+fi
+
+git config user.name "github-actions[bot]"
+git config user.email "github-actions[bot]@users.noreply.github.com"
 
 if git diff --quiet -- README.md; then
 	log "README.md 无变动，跳过推送"
