@@ -31,6 +31,8 @@
 <!-- PLUGIN_VERSIONS_START -->
 | 分类 | 插件包 | 版本 | 说明 |
 | --- | --- | --- | --- |
+| 容器 | `docker` | `29.6.1-r1` | Docker 引擎 |
+| 容器 | `dockerd` | `29.6.1-r1` | Docker 守护进程 |
 | 容器 | `docker-compose` | `5.6.1-r1` | Docker Compose 命令行 |
 | 容器 | `luci-app-dockerman` | `26.302.04020~df794c7` | Docker 容器管理界面 |
 | 容器 | `luci-i18n-dockerman-zh-cn` | `26.302.04020~df794c7` | Docker 管理中文语言包 |

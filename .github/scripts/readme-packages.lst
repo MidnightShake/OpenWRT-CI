@@ -2,6 +2,8 @@
 # 格式：包名 | 分类 | 说明
 # 版本号由 .github/scripts/update-readme.sh 从本次编译的 .manifest 自动读取，
 # 新增插件时只需在这里加一行，README 下次编译结束会自动更新。
+docker | 容器 | Docker 引擎
+dockerd | 容器 | Docker 守护进程
 docker-compose | 容器 | Docker Compose 命令行
 luci-app-dockerman | 容器 | Docker 容器管理界面
 luci-i18n-dockerman-zh-cn | 容器 | Docker 管理中文语言包
