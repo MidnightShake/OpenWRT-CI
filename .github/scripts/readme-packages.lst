@@ -1,0 +1,28 @@
+# README「重点插件版本」表格数据源
+# 格式：包名 | 分类 | 说明
+# 版本号由 .github/scripts/update-readme.sh 从本次编译的 .manifest 自动读取，
+# 新增插件时只需在这里加一行，README 下次编译结束会自动更新。
+docker-compose | 容器 | Docker Compose 命令行
+luci-app-dockerman | 容器 | Docker 容器管理界面
+luci-i18n-dockerman-zh-cn | 容器 | Docker 管理中文语言包
+lucky | 内网穿透 | Lucky 核心（arm64_wanji 版）
+luci-app-lucky | 内网穿透 | Lucky 管理界面
+luci-i18n-lucky-zh-cn | 内网穿透 | Lucky 中文语言包
+luci-app-openclash | 代理 | OpenClash 科学上网客户端
+mosdns | DNS | mosdns 核心
+luci-app-mosdns | DNS | mosdns 管理界面
+luci-i18n-mosdns-zh-cn | DNS | mosdns 中文语言包
+tailscale | 远程访问 | Tailscale 组网核心
+luci-app-tailscale-community | 远程访问 | Tailscale 管理界面
+luci-i18n-tailscale-community-zh-cn | 远程访问 | Tailscale 中文语言包
+luci-theme-argon | 主题 | Argon 默认主题
+luci-app-argon-config | 主题 | Argon 主题配置
+luci-i18n-argon-config-zh-cn | 主题 | Argon 主题配置中文语言包
+luci-app-mini-diskmanager | 存储 | 磁盘管理
+luci-app-samba4 | 存储 | SMB 网络共享
+luci-app-upnp | 网络 | UPnP 端口自动映射
+luci-app-natmapt | 网络 | NAT 穿透辅助
+luci-app-autoreboot | 系统 | 定时重启
+luci-app-partexp | 系统 | 分区自动扩容
+luci-app-wolultra | 系统 | 网络唤醒
+luci-app-gecoosac | 系统 | 广电宽带认证
