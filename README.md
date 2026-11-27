@@ -1,30 +1,109 @@
 # 源自  https://github.com/VIKINGYFY/OpenWRT-CI
 
 # 此为 自用修改版固件
-  - 工作流仅保留生成包含 IPQ60XX-WIFI-YES ： link nn600v2 ipq6000 框架平台固件
-  - 工作流仅.github/workflows/QCA-ALL.yml IPQ60XX-WIFI-YES 相关
 
-# 固件插件修改内容包括：
-  - 增加：luci-app-dockerman  luci-i18n-dockerman-zh-cn  docker-compose
-    - 来源：上游官方
-    
-  - 增加：lucky  luci-app-lucky  luci-i18n-lucky-zh-cn
-    - 来源：https://github.com/FloatingDream528/luci-app-lucky
-    - 当前加入编译固件信息（arm64_wanji）：
-      - 核心源自：https://release.66666.host
-<!-- LUCKY_VERSION_START -->
-      - lucky - 3.3.3_beta-r1
-      - luci-app-lucky - 3.3.3_beta-r1
-      - luci-i18n-lucky-zh-cn - 26.285.11161~1f40dad
-<!-- LUCKY_VERSION_END -->
-      
-  - 科学插件由 luci-app-homeproxy 调整为：luci-app-openclash
-    - 来源：上游官方
-  - 增加：mosdns luci-app-mosdns
-    - 来源：上游官方
+- 工作流仅保留 [`.github/workflows/QCA-ALL.yml`](.github/workflows/QCA-ALL.yml)，只生成包含 `IPQ60XX-WIFI-YES` 的固件
+- 目标设备：`link nn6000-v2`（IPQ60XX / ipq6000 平台，含 WIFI），其余设备均不编译
+- 默认主题：`luci-theme-argon`
+- 仓库纯自用，修改内容未经其它硬件测试
+
+## 固件信息
+
+<!-- FIRMWARE_INFO_START -->
+| 项目 | 内容 |
+| --- | --- |
+| 固件版本 | `未知-未知-未知-未知` |
+| 编译时间 | 未知（UTC+8） |
+| 编译配置 | `未知` |
+| 目标平台 | `未知` |
+| 内核版本 | 未知 |
+| 源码 | `未知` @ `未知` |
+| 固件下载 | [Releases](https://github.com/MidnightShake/OpenWRT-CI/releases) |
+<!-- FIRMWARE_INFO_END -->
+
+> 以上信息由工作流在编译结束后从本次编译结果自动写入，无需手工维护。
+
+## 重点插件版本
+
+下表由工作流读取本次编译生成的 `.manifest` 自动填充版本号，即当前固件内实际打包的版本。
+需要增减条目时改 [`.github/scripts/readme-packages.lst`](.github/scripts/readme-packages.lst) 即可。
+
+<!-- PLUGIN_VERSIONS_START -->
+| 分类 | 插件包 | 版本 | 说明 |
+| --- | --- | --- | --- |
+| 容器 | `docker-compose` | 未包含 | Docker Compose 命令行 |
+| 容器 | `luci-app-dockerman` | 未包含 | Docker 容器管理界面 |
+| 容器 | `luci-i18n-dockerman-zh-cn` | 未包含 | Docker 管理中文语言包 |
+| 内网穿透 | `lucky` | 未包含 | Lucky 核心（arm64_wanji 版） |
+| 内网穿透 | `luci-app-lucky` | 未包含 | Lucky 管理界面 |
+| 内网穿透 | `luci-i18n-lucky-zh-cn` | 未包含 | Lucky 中文语言包 |
+| 代理 | `luci-app-openclash` | 未包含 | OpenClash 科学上网客户端 |
+| DNS | `mosdns` | 未包含 | mosdns 核心 |
+| DNS | `luci-app-mosdns` | 未包含 | mosdns 管理界面 |
+| DNS | `luci-i18n-mosdns-zh-cn` | 未包含 | mosdns 中文语言包 |
+| 远程访问 | `tailscale` | 未包含 | Tailscale 组网核心 |
+| 远程访问 | `luci-app-tailscale-community` | 未包含 | Tailscale 管理界面 |
+| 远程访问 | `luci-i18n-tailscale-community-zh-cn` | 未包含 | Tailscale 中文语言包 |
+| 主题 | `luci-theme-argon` | 未包含 | Argon 默认主题 |
+| 主题 | `luci-app-argon-config` | 未包含 | Argon 主题配置 |
+| 主题 | `luci-i18n-argon-config-zh-cn` | 未包含 | Argon 主题配置中文语言包 |
+| 存储 | `luci-app-mini-diskmanager` | 未包含 | 磁盘管理 |
+| 存储 | `luci-app-samba4` | 未包含 | SMB 网络共享 |
+| 网络 | `luci-app-upnp` | 未包含 | UPnP 端口自动映射 |
+| 网络 | `luci-app-natmapt` | 未包含 | NAT 穿透辅助 |
+| 系统 | `luci-app-autoreboot` | 未包含 | 定时重启 |
+| 系统 | `luci-app-partexp` | 未包含 | 分区自动扩容 |
+| 系统 | `luci-app-wolultra` | 未包含 | 网络唤醒 |
+| 系统 | `luci-app-gecoosac` | 未包含 | 广电宽带认证 |
+<!-- PLUGIN_VERSIONS_END -->
+
+<details>
+<summary>全部 LuCI 插件清单（自动生成）</summary>
+
+<!-- ALL_PLUGINS_START -->
+| 插件包 | 版本 |
+| --- | --- |
+<!-- ALL_PLUGINS_END -->
+
+</details>
+
+## 相对上游的插件改动
+
+### 增加 / 替换
+
+- **Docker**：`luci-app-dockerman`、`luci-i18n-dockerman-zh-cn`、`docker-compose`
+  - 来源：上游 feeds
+- **Lucky**：`lucky`、`luci-app-lucky`、`luci-i18n-lucky-zh-cn`
+  - 来源：https://github.com/MidnightShake/luci-app-lucky
+  - 编译进固件的是 `arm64_wanji` 核心，核心下载源自 https://release.66666.host
+  - 由 [Scripts/PRIVATE.sh](Scripts/PRIVATE.sh) 预下载核心并放入 `dl` 目录
+- **科学上网**：由 `luci-app-homeproxy` 调整为 `luci-app-openclash`
+  - 来源：上游 feeds
+- **mosdns**：`mosdns`、`luci-app-mosdns`、`luci-i18n-mosdns-zh-cn`
+  - 来源：上游 feeds（已处理与 `luci-app-mosdns` 的 init 脚本冲突）
+- **Tailscale**：`tailscale`、`luci-app-tailscale-community`、`luci-i18n-tailscale-community-zh-cn`
+  - 来源：https://github.com/asvow/luci-app-tailscale
+- **主题**：`luci-theme-argon`、`luci-app-argon-config`、`luci-i18n-argon-config-zh-cn`
+  - 来源：https://github.com/sbwml/luci-theme-argon
+- **其它**：`luci-app-autoreboot`、`luci-app-samba4`、`luci-app-upnp`、`luci-app-natmapt`、`luci-app-partexp`、`luci-app-wolultra`、`luci-app-gecoosac`、`luci-app-mini-diskmanager`
+  - 来源：上游 feeds
+
+### 移除
+
+- `luci-app-attendedsysupgrade`、`luci-app-wol`
+
+### 内核与组件
+
+- 完整列表见 [Config/GENERAL.txt](Config/GENERAL.txt)：Docker、USB 网卡/存储、Btrfs、NVMe、nftables（tproxy/offload/queue 等）、WireGuard、mptcp、bonding 等内核模块
+
+## 目录简要说明
+
+- `.github/workflows`：自定义 CI 配置（仅 `QCA-ALL`、`WRT-CORE`、`Auto-Clean`、`Cache-Clean`、`WRT-TEST`）
+- `.github/scripts`：构建辅助脚本，以及本文档的自动更新脚本 `update-readme.sh`
+- `Scripts`：自定义脚本（`Packages.sh` 拉取插件、`Handles.sh` 打补丁、`Settings.sh` 改默认值、`PRIVATE.sh` 私有处理）
+- `Config`：自定义编译配置
 
 # 修改内容未经其它硬件测试
-
 
 <!-- UPSTREAM_README_START -->
 # 上游源 README.md 内容：
@@ -98,3 +177,4 @@ Config——自定义配置
    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=vikingyfy/openwrt-ci&type=date&legend=top-left" />
  </picture>
 </a>
+<!-- UPSTREAM_README_END -->
