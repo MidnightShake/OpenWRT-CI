@@ -71,10 +71,28 @@ replace_block() {
 [ -f "$README" ] || { warn "README 不存在：$README"; exit 1; }
 
 # ---------------------------------------------------------------- manifest
-MANIFEST="${WRT_MANIFEST:-}"
-if [ -z "$MANIFEST" ]; then
-	MANIFEST=$(find "$BUILD_DIR/bin/targets" -type f -name '*.manifest' 2>/dev/null | sort | head -n 1 || true)
-fi
+# 查找顺序：显式指定的 WRT_MANIFEST → 打包步骤另存的副本 →
+#           release 上传目录 upload/ → 源码目录 bin/targets（未被清理时）
+resolve_manifest() {
+	local CANDIDATE
+	for CANDIDATE in \
+		"${WRT_MANIFEST:-}" \
+		"$WORKSPACE/build-reports/firmware.manifest"; do
+		[ -n "$CANDIDATE" ] && [ -f "$CANDIDATE" ] && { printf '%s' "$CANDIDATE"; return 0; }
+	done
+	# 打包步骤会把 manifest 移动/改名到 upload/ 后再执行 make clean
+	if [ -d "$BUILD_DIR/upload" ]; then
+		CANDIDATE=$(find "$BUILD_DIR/upload" -maxdepth 2 -type f -name '*.manifest' 2>/dev/null | sort | head -n 1)
+		if [ -n "$CANDIDATE" ]; then
+			printf '%s' "$CANDIDATE"
+			return 0
+		fi
+	fi
+
+	find "$BUILD_DIR/bin/targets" -type f -name '*.manifest' 2>/dev/null | sort | head -n 1
+}
+
+MANIFEST=$(resolve_manifest || true)
 if [ -n "$MANIFEST" ] && [ -f "$MANIFEST" ]; then
 	log "使用 manifest：${MANIFEST#"$WORKSPACE"/}"
 else

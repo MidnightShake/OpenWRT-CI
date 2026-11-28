@@ -254,6 +254,17 @@ jobs:
             echo "WRT_KVER=$(find ./bin/targets/ -type f -name "*.manifest" -exec grep -oP '^kernel - \K[\d\.]+' {} \;)" >> $GITHUB_ENV
             echo "WRT_LIST=$(find ./bin/targets/ -type f -name "*.manifest" -exec grep -oP '^luci-(app|theme)[^ ]*' {} \; | tr '\n' ' ')" >> $GITHUB_ENV
 
+            # 下面会把 bin/targets 里的文件移动到 upload/ 并执行 make clean，
+            # 因此先把 .manifest 另存到工作区，供后续自动更新 README 使用
+            MANIFEST=$(find ./bin/targets -type f -name '*.manifest' -print -quit)
+            if [ -z "$MANIFEST" ]; then
+              echo "::error::未找到编译生成的 .manifest"
+              exit 1
+            fi
+            mkdir -p "$GITHUB_WORKSPACE/build-reports"
+            cp "$MANIFEST" "$GITHUB_WORKSPACE/build-reports/firmware.manifest"
+            echo "WRT_MANIFEST=$GITHUB_WORKSPACE/build-reports/firmware.manifest" >> $GITHUB_ENV
+
             find ./bin/targets/ -iregex ".*\(buildinfo\|json\|sha256sums\|packages\)$" -exec rm -rf {} +
 
             for FILE in $(find ./bin/targets/ -type f -iname "*$WRT_TARGET*") ; do

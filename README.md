@@ -31,32 +31,32 @@
 <!-- PLUGIN_VERSIONS_START -->
 | 分类 | 插件包 | 版本 | 说明 |
 | --- | --- | --- | --- |
-| 容器 | `docker` | 未包含 | Docker 引擎 |
-| 容器 | `dockerd` | 未包含 | Docker 守护进程 |
-| 容器 | `docker-compose` | 未包含 | Docker Compose 命令行 |
-| 容器 | `luci-app-dockerman` | 未包含 | Docker 容器管理界面 |
-| 容器 | `luci-i18n-dockerman-zh-cn` | 未包含 | Docker 管理中文语言包 |
-| 内网穿透 | `lucky` | 未包含 | Lucky 核心（arm64_wanji 版） |
-| 内网穿透 | `luci-app-lucky` | 未包含 | Lucky 管理界面 |
-| 内网穿透 | `luci-i18n-lucky-zh-cn` | 未包含 | Lucky 中文语言包 |
-| 代理 | `luci-app-openclash` | 未包含 | OpenClash 科学上网客户端 |
-| DNS | `mosdns` | 未包含 | mosdns 核心 |
-| DNS | `luci-app-mosdns` | 未包含 | mosdns 管理界面 |
-| DNS | `luci-i18n-mosdns-zh-cn` | 未包含 | mosdns 中文语言包 |
-| 远程访问 | `tailscale` | 未包含 | Tailscale 组网核心 |
-| 远程访问 | `luci-app-tailscale-community` | 未包含 | Tailscale 管理界面 |
-| 远程访问 | `luci-i18n-tailscale-community-zh-cn` | 未包含 | Tailscale 中文语言包 |
-| 主题 | `luci-theme-argon` | 未包含 | Argon 默认主题 |
+| 容器 | `docker` | `29.6.1-r1` | Docker 引擎 |
+| 容器 | `dockerd` | `29.6.1-r1` | Docker 守护进程 |
+| 容器 | `docker-compose` | `5.8.0-r1` | Docker Compose 命令行 |
+| 容器 | `luci-app-dockerman` | `26.328.10257~6839c87` | Docker 容器管理界面 |
+| 容器 | `luci-i18n-dockerman-zh-cn` | `26.328.10257~6839c87` | Docker 管理中文语言包 |
+| 内网穿透 | `lucky` | `3.8.1-r1` | Lucky 核心（arm64_wanji 版） |
+| 内网穿透 | `luci-app-lucky` | `3.8.1-r1` | Lucky 管理界面 |
+| 内网穿透 | `luci-i18n-lucky-zh-cn` | `26.331.47872~267ba0d` | Lucky 中文语言包 |
+| 代理 | `luci-app-openclash` | `0.48.002` | OpenClash 科学上网客户端 |
+| DNS | `mosdns` | `5.3.3-r1` | mosdns 核心 |
+| DNS | `luci-app-mosdns` | `1.7.15-r1` | mosdns 管理界面 |
+| DNS | `luci-i18n-mosdns-zh-cn` | `26.319.08224~a8a6caf` | mosdns 中文语言包 |
+| 远程访问 | `tailscale` | `1.104.6-r1` | Tailscale 组网核心 |
+| 远程访问 | `luci-app-tailscale-community` | `26.328.10257~6839c87` | Tailscale 管理界面 |
+| 远程访问 | `luci-i18n-tailscale-community-zh-cn` | `26.328.10257~6839c87` | Tailscale 中文语言包 |
+| 主题 | `luci-theme-argon` | `3.1.4-r20261113` | Argon 默认主题 |
 | 主题 | `luci-app-argon-config` | 未包含 | Argon 主题配置 |
-| 主题 | `luci-i18n-argon-config-zh-cn` | 未包含 | Argon 主题配置中文语言包 |
-| 存储 | `luci-app-mini-diskmanager` | 未包含 | 磁盘管理 |
-| 存储 | `luci-app-samba4` | 未包含 | SMB 网络共享 |
-| 网络 | `luci-app-upnp` | 未包含 | UPnP 端口自动映射 |
+| 主题 | `luci-i18n-argon-config-zh-cn` | `26.251.59830~4b8b784` | Argon 主题配置中文语言包 |
+| 存储 | `luci-app-mini-diskmanager` | `1.0.29-r20260215` | 磁盘管理 |
+| 存储 | `luci-app-samba4` | `26.328.10257~6839c87` | SMB 网络共享 |
+| 网络 | `luci-app-upnp` | `26.328.10257~6839c87` | UPnP 端口自动映射 |
 | 网络 | `luci-app-natmapt` | 未包含 | NAT 穿透辅助 |
-| 系统 | `luci-app-autoreboot` | 未包含 | 定时重启 |
-| 系统 | `luci-app-partexp` | 未包含 | 分区自动扩容 |
-| 系统 | `luci-app-wolultra` | 未包含 | 网络唤醒 |
-| 系统 | `luci-app-gecoosac` | 未包含 | 广电宽带认证 |
+| 系统 | `luci-app-autoreboot` | `26.328.10257~6839c87` | 定时重启 |
+| 系统 | `luci-app-partexp` | `2.0.5-r20260318` | 分区自动扩容 |
+| 系统 | `luci-app-wolultra` | `20261016-r1` | 网络唤醒 |
+| 系统 | `luci-app-gecoosac` | `20261016-r1` | 广电宽带认证 |
 <!-- PLUGIN_VERSIONS_END -->
 
 > 显示「未包含」表示该插件在当前源码/配置下没有真正编译进固件（配置里写了 `=y` 但仓库中找不到对应软件包时会出现），可据此排查。
@@ -67,6 +67,27 @@
 <!-- ALL_PLUGINS_START -->
 | 插件包 | 版本 |
 | --- | --- |
+| `luci-app-autoreboot` | 26.328.10257~6839c87 |
+| `luci-app-dockerman` | 26.328.10257~6839c87 |
+| `luci-app-firewall` | 26.328.10257~6839c87 |
+| `luci-app-fullconenat-sonic` | 20261016-r1 |
+| `luci-app-gecoosac` | 20261016-r1 |
+| `luci-app-lucky` | 3.8.1-r1 |
+| `luci-app-mini-diskmanager` | 1.0.29-r20260215 |
+| `luci-app-mosdns` | 1.7.15-r1 |
+| `luci-app-openclash` | 0.48.002 |
+| `luci-app-package-manager` | 26.328.10257~6839c87 |
+| `luci-app-partexp` | 2.0.5-r20260318 |
+| `luci-app-qca-ppe-qos` | 20261122-r1 |
+| `luci-app-router-tool` | 20261127-r6 |
+| `luci-app-samba4` | 26.328.10257~6839c87 |
+| `luci-app-tailscale-community` | 26.328.10257~6839c87 |
+| `luci-app-upnp` | 26.328.10257~6839c87 |
+| `luci-app-wolultra` | 20261016-r1 |
+| `luci-proto-ipv6` | 26.328.10257~6839c87 |
+| `luci-proto-ppp` | 26.328.10257~6839c87 |
+| `luci-proto-relay` | 26.328.10257~6839c87 |
+| `luci-theme-argon` | 3.1.4-r20261113 |
 <!-- ALL_PLUGINS_END -->
 
 </details>
